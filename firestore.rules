@@ -1,0 +1,75 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com');
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == '4opooo@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Diagnostic connection test endpoint
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Students Directory
+    match /students/{studentId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && isValidId(studentId);
+      allow delete: if isAdmin();
+    }
+
+    // Attendance Records
+    match /attendance_records/{recordId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        incoming().recordedByUid == request.auth.uid &&
+        incoming().studentId is string &&
+        incoming().studentName is string &&
+        incoming().attendanceDate is string &&
+        incoming().attendanceTime is string &&
+        incoming().selfiePhotoLink is string &&
+        incoming().attendanceStatus in ['Present', 'Late', 'Excused', 'Absent'];
+      
+      allow update: if isSignedIn() && (
+        existing().recordedByUid == request.auth.uid || isAdmin()
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // Application Settings (e.g. Google Sheets webhook URL)
+    match /app_settings/{settingId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && isValidId(settingId);
+    }
+  }
+}

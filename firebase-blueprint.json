@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "attendance_record": {
+      "title": "Attendance Record",
+      "description": "Student attendance record with selfie capture and timestamp",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "description": "Unique student identifier",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 32
+        },
+        "studentName": {
+          "type": "string",
+          "description": "Full name of the student",
+          "maxLength": 100
+        },
+        "attendanceDate": {
+          "type": "string",
+          "description": "Date of attendance (YYYY-MM-DD)",
+          "maxLength": 20
+        },
+        "attendanceTime": {
+          "type": "string",
+          "description": "Time of attendance (e.g. 09:30:15 AM)",
+          "maxLength": 30
+        },
+        "selfiePhotoLink": {
+          "type": "string",
+          "description": "Captured selfie photo as base64 data URL or storage link",
+          "maxLength": 1000000
+        },
+        "attendanceStatus": {
+          "type": "string",
+          "description": "Status of attendance",
+          "enum": ["Present", "Late", "Excused", "Absent"]
+        },
+        "submissionTimestamp": {
+          "type": "string",
+          "description": "ISO timestamp of submission",
+          "maxLength": 40
+        },
+        "recordedByUid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the teacher/user recording attendance",
+          "maxLength": 128
+        },
+        "recordedByEmail": {
+          "type": "string",
+          "description": "Email address of the recorder",
+          "maxLength": 128
+        },
+        "syncedToSheets": {
+          "type": "boolean",
+          "description": "Whether this record has been dispatched to Google Sheets"
+        }
+      },
+      "required": [
+        "studentId",
+        "studentName",
+        "attendanceDate",
+        "attendanceTime",
+        "selfiePhotoLink",
+        "attendanceStatus",
+        "submissionTimestamp",
+        "recordedByUid"
+      ]
+    },
+    "student": {
+      "title": "Student",
+      "description": "Registered student at Angan Educare Foundation",
+      "type": "object",
+      "properties": {
+        "studentId": {
+          "type": "string",
+          "description": "Unique student ID code",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 32
+        },
+        "name": {
+          "type": "string",
+          "description": "Student full name",
+          "maxLength": 100
+        },
+        "grade": {
+          "type": "string",
+          "description": "Class or grade level",
+          "maxLength": 50
+        },
+        "section": {
+          "type": "string",
+          "description": "Section or batch",
+          "maxLength": 20
+        },
+        "rollNo": {
+          "type": "string",
+          "description": "Roll number",
+          "maxLength": 20
+        },
+        "guardianName": {
+          "type": "string",
+          "description": "Guardian or parent name",
+          "maxLength": 100
+        },
+        "contactPhone": {
+          "type": "string",
+          "description": "Contact phone number",
+          "maxLength": 20
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the student is actively enrolled"
+        }
+      },
+      "required": ["studentId", "name", "grade"]
+    },
+    "app_setting": {
+      "title": "Application Setting",
+      "description": "Configuration settings such as Google Sheet webhook url",
+      "type": "object",
+      "properties": {
+        "googleSheetsWebhookUrl": {
+          "type": "string",
+          "description": "Google Apps Script Webhook URL for Google Sheets",
+          "maxLength": 1000
+        },
+        "foundationName": {
+          "type": "string",
+          "description": "Foundation name",
+          "maxLength": 100
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "User UID who last updated configuration",
+          "maxLength": 128
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of update",
+          "maxLength": 40
+        }
+      },
+      "required": ["foundationName"]
+    }
+  },
+  "firestore": {
+    "/attendance_records/{recordId}": {
+      "schema": {
+        "$ref": "#/entities/attendance_record"
+      },
+      "description": "Collection of student attendance records"
+    },
+    "/students/{studentId}": {
+      "schema": {
+        "$ref": "#/entities/student"
+      },
+      "description": "Collection of enrolled students"
+    },
+    "/app_settings/{settingId}": {
+      "schema": {
+        "$ref": "#/entities/app_setting"
+      },
+      "description": "App configurations like webhook links"
+    }
+  }
+}

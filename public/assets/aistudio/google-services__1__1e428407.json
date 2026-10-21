@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119570125762",
+    "project_id": "angan-educare",
+    "storage_bucket": "angan-educare.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119570125762:android:6feedb40bd34a0b5bcbc5b",
+        "android_client_info": {
+          "package_name": "org.anganeducare.attendance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIQDqR1UdClqJVnunQfuBOuBlmfLzDOYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

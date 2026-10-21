@@ -1,0 +1,6 @@
+{
+  "name": "Angan Educare Attendance",
+  "description": "Android mobile attendance system with selfie verification and Google Sheets sync for Angan Educare Foundation.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
